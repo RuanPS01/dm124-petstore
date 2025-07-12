@@ -1,0 +1,52 @@
+services:
+  mongo-db:
+    image: "mongo"
+    container_name: "dm124-mongo"
+    restart: unless-stopped
+    command:
+      - '--logpath'
+      - '/var/log/mongodb/mongod.log'
+    ports:
+      - "27017:27017"
+    networks:
+      - dm124-network
+
+  auth:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./auth
+    container_name: "dm124-auth"
+    ports:
+      - "3001:3001"
+    networks:
+      - dm124-network
+    environment:
+      - PORTA=3001
+      - CHAVE_PRIVADA=UmaChaveBemGrandeParaDificultarODecode
+      - TEMPO_EXP=1d
+      - NODE_ENV=prod
+
+  petstore:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./petstore
+    container_name: "dm124-petstore"
+    ports:
+      - "3000:3000"
+    networks:
+      - dm124-network
+    depends_on:
+      - mongo-db
+      - auth
+    environment:
+      - PORTA=3000
+      - MONGODB_HOST=mongo-db
+      - MONGODB_PORT=27017
+      - MONGODB_NAME=petstore
+      - AUTH_SERVER=auth:3001
+      - NODE_ENV=prod
+    
+
+networks:
+  dm124-network:
+    driver: bridge
