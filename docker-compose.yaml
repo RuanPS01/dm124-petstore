@@ -1,7 +1,7 @@
 services:
-  mongo-db:
+  ruan-mongo-db:
     image: "mongo"
-    container_name: "dm124-mongo"
+    container_name: "ruan-dm124-mongo"
     restart: unless-stopped
     command:
       - '--logpath'
@@ -9,44 +9,43 @@ services:
     ports:
       - "27017:27017"
     networks:
-      - dm124-network
+      - ruan-dm124-network
 
-  auth:
+  ruan-auth:
     build:
       dockerfile: ./Dockerfile
       context: ./auth
-    container_name: "dm124-auth"
+    container_name: "ruan-dm124-auth"
     ports:
       - "3001:3001"
     networks:
-      - dm124-network
+      - ruan-dm124-network
     environment:
       - PORTA=3001
-      - CHAVE_PRIVADA=UmaChaveBemGrandeParaDificultarODecode
+      - CHAVE_PRIVADA=7f9a2b8c1d4e6f3a9b8c7d2e5f1a4b9c8d7e6f2a3b1c9d8e7f4a2b5c6d9e8f1a3b
       - TEMPO_EXP=1d
       - NODE_ENV=prod
 
-  petstore:
+  ruan-petstore:
     build:
       dockerfile: ./Dockerfile
       context: ./petstore
-    container_name: "dm124-petstore"
+    container_name: "ruan-dm124-petstore"
     ports:
       - "3000:3000"
     networks:
-      - dm124-network
+      - ruan-dm124-network
     depends_on:
-      - mongo-db
-      - auth
+      - ruan-mongo-db
+      - ruan-auth
     environment:
       - PORTA=3000
-      - MONGODB_HOST=mongo-db
+      - MONGODB_HOST=ruan-mongo-db
       - MONGODB_PORT=27017
       - MONGODB_NAME=petstore
-      - AUTH_SERVER=auth:3001
+      - AUTH_SERVER=ruan-auth:3001
       - NODE_ENV=prod
-    
 
 networks:
-  dm124-network:
+  ruan-dm124-network:
     driver: bridge

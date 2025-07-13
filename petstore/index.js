@@ -23,6 +23,6 @@ mongoose.connect(database.DB_URL, database.DB_SETTINGS)
     .then(() => console.log('Conectado ao MongoDB.'))
     .catch(erro => console.log(`Erro ao conectar ao MongoDB: ${erro}`));
 
-app.listen(porta, function() {
+app.listen(porta, function () {
     console.log(`Petstore rodando na porta ${porta}`);
 });

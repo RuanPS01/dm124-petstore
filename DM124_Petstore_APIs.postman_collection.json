@@ -1,0 +1,297 @@
+{
+	"info": {
+		"_postman_id": "f7f8db6a-c759-4e76-a55d-f30b45d7ce79",
+		"name": "DM124 Petstore APIs",
+		"description": "Collection for testing Auth and Petstore APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5272549"
+	},
+	"item": [
+		{
+			"name": "Auth Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{auth_url}}/",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('jwt_token', response.token);",
+									"    console.log('Token saved:', response.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": \"admin\",\n  \"pass\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_url}}/auth/login",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{auth_url}}/auth/validaToken",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"auth",
+								"validaToken"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Petstore Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{petstore_url}}/",
+							"host": [
+								"{{petstore_url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Pet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Rex\",\n  \"raca\": \"Boxer\",\n  \"idade\": 5\n}"
+						},
+						"url": {
+							"raw": "{{petstore_url}}/pet",
+							"host": [
+								"{{petstore_url}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Pets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{petstore_url}}/pet",
+							"host": [
+								"{{petstore_url}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Pets with Filter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{petstore_url}}/pet",
+							"host": [
+								"{{petstore_url}}"
+							],
+							"path": [
+								"pet"
+							],
+							"query": [
+								{
+									"key": "raca",
+									"value": "Boxer",
+									"disabled": true
+								},
+								{
+									"key": "nome",
+									"value": "Rex",
+									"disabled": true
+								},
+								{
+									"key": "idade",
+									"value": "6",
+									"disabled": true
+								},
+								{
+									"key": "createdAt",
+									"value": "2025-07-13T00:29:41.925Z",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Pet Age",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idade\": 6\n}"
+						},
+						"url": {
+							"raw": "{{petstore_url}}/pet/idade/:nomeDoPet",
+							"host": [
+								"{{petstore_url}}"
+							],
+							"path": [
+								"pet",
+								"idade",
+								":nomeDoPet"
+							],
+							"variable": [
+								{
+									"key": "nomeDoPet",
+									"value": "Rex"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Pet",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{petstore_url}}/pet/:nomeDoPet",
+							"host": [
+								"{{petstore_url}}"
+							],
+							"path": [
+								"pet",
+								":nomeDoPet"
+							],
+							"variable": [
+								{
+									"key": "nomeDoPet",
+									"value": "Rex"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_url",
+			"value": "http://localhost:3001"
+		},
+		{
+			"key": "petstore_url",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "jwt_token",
+			"value": ""
+		}
+	]
+}

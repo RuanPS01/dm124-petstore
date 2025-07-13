@@ -10,6 +10,6 @@ app.use(routes);
 
 const porta = process.env.PORTA || 3001;
 
-app.listen(porta, function() {
+app.listen(porta, function () {
     console.log(`Auth rodando na porta ${porta}`);
 });
